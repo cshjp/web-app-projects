@@ -27,7 +27,7 @@ describe Application do
 
   context "GET /albums" do
     it 'returns a list of albums' do
-      response = get('/albums')
+      response = get('/albums/')
 
 
       expect(response.status).to eq(200)
@@ -39,7 +39,7 @@ describe Application do
 
   context "GET /artists" do
     it 'returns a list of artists' do
-      response = get('/artists')
+      response = get('/artists/')
 
 
       expect(response.status).to eq(200)
@@ -57,6 +57,38 @@ describe Application do
       expect(response.body).to include(
       '<p>Genre: Pop</p>'
       )
+    end
+  end
+
+  context "GET /albums/new" do
+    it 'brings up a form to add a new album' do
+      response = get('/albums/new')
+      expect(response.status).to eq 200
+      expect(response.body).to include('<form method="POST" action="/albums/created">')
+    end
+  end
+
+  context "POST /albums/created" do
+    it 'receives POST from /albums/new and confirms added' do
+      response = post('/albums/created', album_title: 'Test', album_release_year: '2001', album_artist_id: 1)
+      expect(response.status).to eq 200
+      expect(response.body).to include('<h1>Album: Test, has been added</h1>')
+    end
+  end
+
+  context "GET /artists/new" do
+    it 'brings up a form to add a new artist' do
+      response = get('/artists/new')
+      expect(response.status).to eq 200
+      expect(response.body).to include('<form method="POST" action="/artists/created">')
+    end
+  end
+
+  context "POST /artists/created" do
+    it 'receives POST from /artists/new and confirms added' do
+      response = post('/artists/created', artist_name: 'Test', artist_genre: '2001')
+      expect(response.status).to eq 200
+      expect(response.body).to include('<h1>Artist: Test, has been added</h1>')
     end
   end
 end
